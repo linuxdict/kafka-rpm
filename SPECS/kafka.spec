@@ -32,6 +32,7 @@ Follow this example and you can do no wrong
 
 %install
 pwd
+rm -rf %{buildroot}/*
 mkdir -p $RPM_BUILD_ROOT/opt/kafka
 mkdir -p $RPM_BUILD_ROOT/opt/kafka/config
 
