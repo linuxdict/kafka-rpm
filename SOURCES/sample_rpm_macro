@@ -1,11 +1,11 @@
-%packager               m6d
-%distribution           m6d.com
-%vendor                 m6d.com
+%packager               kafkarpm
+%distribution           kafkarpm
+%vendor                 kafkarpm
 
 %_signature             gpg
-%_gpg_name              m6d.com
+%_gpg_name              kafkarpm
 
-%_topdir                %(echo $HOME)/m6d
+%_topdir                %(echo $HOME)/Documents/kafka-rpm
 %_tmppath               %{_topdir}/tmp
 %_builddir              %{_tmppath}
 

@@ -1,49 +1,48 @@
 %define __jar_repack 0
 Summary: Kafka and distributed topic based producer consumer queue
 Name: kafka
-Version: 0.7.2
+Version: 0.8.0
 Release: 1
 License: Apache (v2)
 Group: Applications
-Source0: ftp://ftp.nowhere.com/kafka-%{version}.tar.gz
+Source0: %{name}-%{version}-src.tgz
 Source1: ftp://ftp.nowhere.com/kafka.init
 Source2: ftp://ftp.nowhere.com/kafka-zookeeper.init
 URL: http://kafka.apache.org
 #BuildRoot: tmp/kafka-0.7.1
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-Distribution: m6d
-Vendor: m6d
+Distribution: huffpo
+Vendor: huffpo
 Packager: edlinuxguru@gmail.com
 
-Prereq: jdk >= 1.6
+#I rarely have a packaged java
+#Prereq: jdk >= 1.6
 
 %description
 Follow this example and you can do no wrong
 
 %prep
 
-%setup
+%setup -q -n %{name}-%{version}-src
 
 %build
+./sbt update
+./sbt package
+./sbt release-zip
 
 %install
 pwd
 mkdir -p $RPM_BUILD_ROOT/opt/kafka
 mkdir -p $RPM_BUILD_ROOT/opt/kafka/config
 
-cp -r bin $RPM_BUILD_ROOT/opt/kafka
-cp -r clients $RPM_BUILD_ROOT/opt/kafka/clients
-cp -r config $RPM_BUILD_ROOT/opt/kafka/config-sample
+#../tmp/kafka-0.8.0-src/target/RELEASE/kafka_2.8.0-0.8.0/
+cp -r target/RELEASE/kafka_2.8.0-0.8.0/bin $RPM_BUILD_ROOT/opt/kafka
 
-cp -r contrib $RPM_BUILD_ROOT/opt/kafka/contrib
-cp -r core $RPM_BUILD_ROOT/opt/kafka/core
-cp -r examples $RPM_BUILD_ROOT/opt/kafka/examples
-cp -r lib $RPM_BUILD_ROOT/opt/kafka/lib
-cp -r lib_managed $RPM_BUILD_ROOT/opt/kafka/lib_managed
-cp -r perf $RPM_BUILD_ROOT/opt/kafka/perf
-cp -r project $RPM_BUILD_ROOT/opt/kafka/project
-cp sbt $RPM_BUILD_ROOT/opt/kafka/
-#cp -r system_test $RPM_BUILD_ROOT/opt/kafka/system_test #Do not need this 
+cp -r target/RELEASE/kafka_2.8.0-0.8.0/config $RPM_BUILD_ROOT/opt/kafka/config-sample
+
+cp -r target/RELEASE/kafka_2.8.0-0.8.0/libs $RPM_BUILD_ROOT/opt/kafka/libs
+
+cp -r target/RELEASE/kafka_2.8.0-0.8.0/kafka_2.8.0-0.8.0.jar $RPM_BUILD_ROOT/opt/kafka
 
 mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
 install  -m 755 %{S:1} $RPM_BUILD_ROOT/etc/rc.d/init.d/kafka
@@ -62,6 +61,8 @@ install  -m 755 %{S:2} $RPM_BUILD_ROOT/etc/rc.d/init.d/kafka-zookeeper
 #used to cleanup things outside the build area and possibly inside.
 
 %changelog
+* Wed Apr 9 2014 Edward Capriolo <edlinuxguru@gmail.com>
+- Update to Kafka 0.8.0 encorporate some changes from https://github.com/kosii/kafka-rpm/
 * Wed Jul 11 2012 Edward Capriolo <edward@m6d.com>
 - Rebuild against kafka trunk for mirror mode support
 * Mon May  7 2012  Edward Capriolo <edward@m6d.com>
