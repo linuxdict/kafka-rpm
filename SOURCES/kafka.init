@@ -18,6 +18,8 @@ case "$1" in
   start)
     echo -n "Starting Kafka:"
     /sbin/runuser $KAFKA_USER -c "nohup $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties > /var/log/kafka/server.out 2> /var/log/kafka/server.err &"
+    # after kafka 0.8.2 there is daemon option when starting service
+    # /sbin/runuser $KAFKA_USER -c "$KAFKA_HOME/bin/kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties"
     echo " done."
     exit 0
     ;;
